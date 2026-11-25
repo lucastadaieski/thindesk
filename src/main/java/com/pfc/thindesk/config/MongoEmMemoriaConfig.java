@@ -1,12 +1,12 @@
 package com.pfc.thindesk.config;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
+import com.mongodb.ConnectionString;
 import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.mongo.MongoConnectionDetails;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,8 +15,8 @@ import java.io.UncheckedIOException;
 import java.net.ServerSocket;
 
 /**
- * Quando a variável MONGODB_URI não está definida, o sistema sobe um MongoDB
- * em memória. Assim qualquer pessoa roda o projeto sem configurar nada
+ * Quando a variável MONGODB_URI não está definida (ou está vazia), o sistema sobe
+ * um MongoDB em memória. Assim qualquer pessoa roda o projeto sem configurar nada
  * (os dados somem ao reiniciar). Com MONGODB_URI, usa o MongoDB Atlas.
  */
 @Configuration
@@ -35,9 +35,14 @@ public class MongoEmMemoriaConfig {
         return servidor;
     }
 
-    @Bean(destroyMethod = "close")
-    public MongoClient mongoClient(MongoServer mongoServer) {
-        return MongoClients.create("mongodb://127.0.0.1:" + porta);
+    /**
+     * Endereço do banco em memória. Substitui a propriedade spring.data.mongodb.uri,
+     * e o Spring Boot cria o MongoClient a partir dele.
+     */
+    @Bean
+    public MongoConnectionDetails mongoConnectionDetails(MongoServer mongoServer) {
+        ConnectionString endereco = new ConnectionString("mongodb://127.0.0.1:" + porta);
+        return () -> endereco;
     }
 
     private static int portaLivre() {
