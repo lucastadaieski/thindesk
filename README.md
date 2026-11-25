@@ -8,7 +8,7 @@ Sistema web para **abrir, acompanhar e resolver chamados técnicos**, desenvolvi
 
 ## Acesso à aplicação (deploy)
 
-**Link:** https://SEU-SERVICO.onrender.com
+**Link:** https://thindesk-idrs.onrender.com
 
 | Perfil | E-mail | Senha |
 |--------|--------|-------|
@@ -47,7 +47,7 @@ Ao aumentar uma parte, as da direita voltam a zero (`2.1.3` → `2.2.0`). Uma ve
 
 ## Dashboard
 
-![Dashboard do ThinDesk](docs/dashboard.png)
+![Dashboard do ThinDesk](docs/print-dash.png)
 
 O dashboard é a tela inicial depois do login e segue o layout do ThinDesk original (mesma sidebar, Bootstrap e logo). Ele mostra:
 - indicadores de chamados **abertos**, **em andamento** e **concluídos**, mais a **taxa de conclusão** (clicar num indicador abre a lista filtrada);
