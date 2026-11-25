@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head('Horário de Atendimento')}"></head>
+<body>
+<div th:replace="~{fragments/comum :: toggle}"></div>
+<aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+<main id="content">
+    <h2 class="mb-4">Ajustes de Horários por Setor</h2>
+    <div th:replace="~{fragments/comum :: alertas}"></div>
+
+    <div class="card card-painel mb-3" sec:authorize="hasRole('ADMIN')">
+        <div class="card-body">
+            <form th:action="@{/ajustes-horarios/salvar}" th:object="${novoHorario}" method="post" class="row g-2 align-items-end">
+                <div class="col-md-3">
+                    <label for="setor" class="form-label">Setor</label>
+                    <input type="text" id="setor" th:field="*{setor}" class="form-control" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="diaSemana" class="form-label">Dia</label>
+                    <input type="text" id="diaSemana" th:field="*{diaSemana}" class="form-control"
+                           placeholder="Ex.: Segunda a sexta" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="horarioInicio" class="form-label">Início</label>
+                    <input type="time" id="horarioInicio" th:field="*{horarioInicio}" class="form-control" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="horarioFim" class="form-label">Fim</label>
+                    <input type="time" id="horarioFim" th:field="*{horarioFim}" class="form-control" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card card-painel">
+        <table class="table table-striped align-middle mb-0">
+            <thead><tr><th>Setor</th><th>Dia</th><th>Início</th><th>Fim</th><th sec:authorize="hasRole('ADMIN')">Ações</th></tr></thead>
+            <tbody>
+            <tr th:if="${horarios.isEmpty()}"><td colspan="5" class="text-center text-muted py-4">Nenhum horário cadastrado.</td></tr>
+            <tr th:each="horario : ${horarios}">
+                <td th:text="${horario.setor}"></td>
+                <td th:text="${horario.diaSemana}"></td>
+                <td th:text="${horario.horarioInicio}"></td>
+                <td th:text="${horario.horarioFim}"></td>
+                <td sec:authorize="hasRole('ADMIN')">
+                    <form th:action="@{/ajustes-horarios/deletar/{id}(id=${horario.id})}" method="post" data-confirmar="Remover este horário?">
+                        <button type="submit" class="btn btn-danger btn-sm">Deletar</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<th:block th:replace="~{fragments/comum :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head('Chamados')}"></head>
+<body>
+<div th:replace="~{fragments/comum :: toggle}"></div>
+<aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+<main id="content">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+        <h2 class="mb-0">Lista de Chamados</h2>
+        <a th:href="@{/chamados/novo}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Novo chamado</a>
+    </div>
+
+    <div th:replace="~{fragments/comum :: alertas}"></div>
+
+    <!-- Filtro por status -->
+    <div class="mb-3 d-flex flex-wrap gap-2">
+        <a th:href="@{/chamados}" class="btn btn-sm"
+           th:classappend="${filtro == null} ? 'btn-dark' : 'btn-outline-dark'">Todos</a>
+        <a th:each="s : ${statusLista}" th:href="@{/chamados(status=${s.name()})}" class="btn btn-sm"
+           th:classappend="${filtro == s} ? 'btn-dark' : 'btn-outline-dark'" th:text="${s.descricao}">Status</a>
+    </div>
+
+    <div class="card card-painel">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle mb-0">
+                <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Status</th>
+                    <th>Tipo</th>
+                    <th>Prioridade</th>
+                    <th>Técnico</th>
+                    <th>Usuário</th>
+                    <th>Abertura</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${chamados.isEmpty()}">
+                    <td colspan="8" class="text-center text-muted py-4">Nenhum chamado encontrado.</td>
+                </tr>
+                <tr th:each="chamado : ${chamados}">
+                    <td th:text="${chamado.titulo}">Título</td>
+                    <td><span class="badge" th:classappend="'text-bg-' + ${chamado.status.cor}" th:text="${chamado.status.descricao}">Status</span></td>
+                    <td th:text="${chamado.tipo}">Tipo</td>
+                    <td><span th:if="${chamado.prioridade}" class="badge" th:classappend="'text-bg-' + ${chamado.prioridade.cor}" th:text="${chamado.prioridade.descricao}">Prioridade</span></td>
+                    <td th:text="${chamado.tecnico} ?: '-'">-</td>
+                    <td th:text="${chamado.usuario}">Usuário</td>
+                    <td class="text-nowrap" th:text="${chamado.dataAbertura} ? ${#temporals.format(chamado.dataAbertura, 'dd/MM/yyyy HH:mm')} : '-'">-</td>
+                    <td class="text-end">
+                        <a th:href="@{/chamados/{id}(id=${chamado.id})}" class="btn btn-warning btn-sm">
+                            <i class="bi bi-eye"></i> Abrir
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<th:block th:replace="~{fragments/comum :: scripts}"></th:block>
+</body>
+</html>

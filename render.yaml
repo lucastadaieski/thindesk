@@ -1,0 +1,19 @@
+# Blueprint do Render: cria o serviço web a partir do Dockerfile.
+# No Render: New > Blueprint > escolha este repositório.
+services:
+  - type: web
+    name: thindesk
+    runtime: docker
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: MONGODB_URI
+        sync: false        # preencher no painel do Render (conexão do MongoDB Atlas)
+      - key: MONGODB_DATABASE
+        value: thindesk
+      - key: SENHA_ADMIN
+        sync: false        # preencher no painel do Render
+      - key: SENHA_TECNICO
+        value: tecnico123
+      - key: SENHA_USUARIO
+        value: usuario123

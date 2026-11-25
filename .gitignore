@@ -1,0 +1,18 @@
+target/
+.env
+*.log
+
+### IntelliJ IDEA ###
+.idea/
+*.iml
+out/
+
+### NetBeans ###
+nbproject/
+nbactions*.xml
+nb-configuration.xml
+
+### VS Code ###
+.vscode/
+
+.DS_Store

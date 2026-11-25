@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head('Tipo de Chamado')}"></head>
+<body>
+<div th:replace="~{fragments/comum :: toggle}"></div>
+<aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+<main id="content">
+    <h2 class="mb-4">Tipos de Chamado</h2>
+    <div th:replace="~{fragments/comum :: alertas}"></div>
+
+    <div class="card card-painel mb-3" sec:authorize="hasRole('ADMIN')">
+        <div class="card-body">
+            <form th:action="@{/tipo-chamado/salvar}" th:object="${novoTipo}" method="post" class="row g-2 align-items-end">
+                <div class="col-md-4">
+                    <label for="nome" class="form-label">Nome</label>
+                    <input type="text" id="nome" th:field="*{nome}" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="descricao" class="form-label">Descrição</label>
+                    <input type="text" id="descricao" th:field="*{descricao}" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-plus-lg"></i> Adicionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card card-painel">
+        <table class="table table-striped align-middle mb-0">
+            <thead><tr><th>Nome</th><th>Descrição</th><th sec:authorize="hasRole('ADMIN')"></th></tr></thead>
+            <tbody>
+            <tr th:if="${tipos.isEmpty()}"><td colspan="3" class="text-center text-muted py-4">Nenhum tipo cadastrado.</td></tr>
+            <tr th:each="tipo : ${tipos}">
+                <td th:text="${tipo.nome}"></td>
+                <td th:text="${tipo.descricao}"></td>
+                <td class="text-end" sec:authorize="hasRole('ADMIN')">
+                    <form th:action="@{/tipo-chamado/excluir/{id}(id=${tipo.id})}" method="post" data-confirmar="Excluir este tipo?">
+                        <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<th:block th:replace="~{fragments/comum :: scripts}"></th:block>
+</body>
+</html>

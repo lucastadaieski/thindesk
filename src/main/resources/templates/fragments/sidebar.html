@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<aside th:fragment="sidebar">
+    <div id="sidebar" class="d-flex flex-column">
+        <div class="text-center pt-3 pb-2">
+            <img th:src="@{/images/logo.png}" alt="ThinDesk" class="sidebar-logo">
+            <h4 class="mt-1 mb-0">Thindesk Menu</h4>
+        </div>
+
+        <div class="px-3 py-2 mx-2 mb-2 rounded sidebar-usuario">
+            <div class="fw-semibold text-truncate" th:text="${#authentication.principal.nome}">Usuário</div>
+            <small class="text-white-50" th:text="${#authentication.principal.perfil.descricao}">Perfil</small>
+        </div>
+
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${pagina == 'dashboard'} ? 'ativo'" th:href="@{/}">
+                    <i class="bi bi-speedometer2"></i> <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${pagina == 'chamados'} ? 'ativo'" th:href="@{/chamados}">
+                    <i class="bi bi-headset"></i> <span>Chamados</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${pagina == 'clientes'} ? 'ativo'" th:href="@{/clientes}">
+                    <i class="bi bi-person"></i> <span>Clientes</span>
+                </a>
+            </li>
+            <li class="nav-item" th:classappend="${pagina == 'tecnicos' or pagina == 'tipos' or pagina == 'horarios'} ? 'open'">
+                <a class="nav-link" href="#" onclick="toggleSubmenu(event, this)">
+                    <i class="bi bi-gear"></i> <span>Configurações</span>
+                    <span class="float-end">&#9662;</span>
+                </a>
+                <ul class="nav flex-column submenu">
+                    <li class="nav-item" sec:authorize="hasAnyRole('TECNICO','ADMIN')">
+                        <a class="nav-link" th:classappend="${pagina == 'tecnicos'} ? 'ativo'" th:href="@{/tecnicos}">
+                            <i class="bi bi-person-badge"></i> <span>Técnicos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyRole('TECNICO','ADMIN')">
+                        <a class="nav-link" th:classappend="${pagina == 'tipos'} ? 'ativo'" th:href="@{/tipo-chamado}">
+                            <i class="bi bi-megaphone"></i> <span>Tipo de Chamado</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${pagina == 'horarios'} ? 'ativo'" th:href="@{/ajustes-horarios}">
+                            <i class="bi bi-alarm"></i> <span>Horário de Atendimento</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <div class="mt-auto p-3">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-outline-light btn-sm w-100">
+                    <i class="bi bi-box-arrow-right"></i> Sair
+                </button>
+            </form>
+            <div class="text-center text-white-50 small mt-2" th:text="'versão ' + ${versao}">versão</div>
+        </div>
+    </div>
+</aside>
+</body>
+</html>
